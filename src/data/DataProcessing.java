@@ -156,6 +156,7 @@ public class DataProcessing {
         }
         return false;
     }
+
     public static Enumeration<User> getAllUser() throws SQLException {
         if (!connectedToDatabase) {
             throw new SQLException("Not connected to Database");

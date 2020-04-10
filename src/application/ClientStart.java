@@ -13,8 +13,7 @@ public class ClientStart {
         DataProcessing.connectToDatabase();
         try {
             Client mt = new Client("127.0.0.1");
-            Thread t = new Thread(mt);
-            t.start();
+            new Thread(mt).start();
         } catch (Exception e) {
             e.printStackTrace();
         }

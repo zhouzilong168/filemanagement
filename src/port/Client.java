@@ -37,19 +37,15 @@ public class Client extends JFrame implements Runnable {
 
     // connect to server and process messages from server
     public void runClient() {
-        try
-        {
+        try {
             connectToServer();
             getStreams();
             processConnection();
-        }
-        catch (EOFException eofException) {
+        } catch (EOFException eofException) {
             displayMessage("\nClient terminated connection");
-        }
-        catch (IOException ioException) {
+        } catch (IOException ioException) {
             ioException.printStackTrace();
-        }
-        finally {
+        } finally {
             closeConnection();
         }
     }
@@ -80,10 +76,8 @@ public class Client extends JFrame implements Runnable {
     // process connection with server
     private void processConnection() throws IOException {
         setTextFieldEditable(true);
-        do
-        {
-            try
-            {
+        do {
+            try {
                 message = (String) dis.readObject();
                 displayMessage("\n" + message);
 
@@ -160,14 +154,13 @@ public class Client extends JFrame implements Runnable {
             if (fos != null) fos.close();
             if (fis != null) fis.close();
             client.close();
-        }
-        catch (IOException ioException) {
+        } catch (IOException ioException) {
             ioException.printStackTrace();
         }
     }
 
     //send file to server
-    public static void sendFile(String name) throws IOException {
+    public static void sendFile(String name) {
         try {
             File file = new File(name);
             fis = new FileInputStream(file);
@@ -187,8 +180,12 @@ public class Client extends JFrame implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (fis != null)
-                fis.close();
+            try {
+                if (fis != null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -235,12 +232,10 @@ public class Client extends JFrame implements Runnable {
 
     // send message to server
     public static void sendData(String message) {
-        try
-        {
+        try {
             dos.writeObject("CLIENT>>> " + message);
             dos.flush();
-        }
-        catch (IOException ioException) {
+        } catch (IOException ioException) {
             displayArea.append("\nError writing object");
         }
     }
@@ -249,8 +244,7 @@ public class Client extends JFrame implements Runnable {
     public static void displayMessage(final String messageToDisplay) {
         SwingUtilities.invokeLater(
                 new Runnable() {
-                    public void run()
-                    {
+                    public void run() {
                         displayArea.append(messageToDisplay);
                     }
                 }
@@ -261,8 +255,7 @@ public class Client extends JFrame implements Runnable {
     private void setTextFieldEditable(final boolean editable) {
         SwingUtilities.invokeLater(
                 new Runnable() {
-                    public void run()
-                    {
+                    public void run() {
                         enterField.setEditable(editable);
                     }
                 }
