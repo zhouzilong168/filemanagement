@@ -2,33 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ca662eb-7ac9-4d3e-8a20-ff70edfab767" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/resources/clientfiles/c3p0-0.9.1-pre6.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/TMFriend.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/client.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/client0.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/client1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/file.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/selfMod.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/server.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/user.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/welcome.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/serverfiles/c3p0-0.9.1-pre6.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/ClientStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/application/ClientStart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/ServerStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/application/ServerStart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/DataProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataProcessing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/Administrator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Administrator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/Browser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Browser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/Doc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Doc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/Operator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Operator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/fileFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/loginFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/mainFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/selfFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/userFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/port/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/port/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/port/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/port/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -60,11 +35,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/application/ClientStart.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="294">
-              <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+              <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/frame/LoginFrame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="84">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="210">
+                <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -180,6 +176,7 @@
         <option value="$PROJECT_DIR$/src/port/Server.java" />
         <option value="$PROJECT_DIR$/src/port/Client.java" />
         <option value="$PROJECT_DIR$/src/frame/fileFrame.java" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -236,6 +233,12 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="port" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="filemanagement" type="b2602c69:ProjectViewProjectNode" />
+              <item name="filemanagement" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="pictrue" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -248,10 +251,19 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/resources/pictrue" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\IDEA\test\filemanagement\src\resources\pictrue" />
+      <recent name="F:\IDEA\test\filemanagement\src" />
+      <recent name="F:\IDEA\test\filemanagement\src\port" />
+      <recent name="F:\IDEA\test\filemanagement\src\frame" />
+      <recent name="F:\IDEA\test\filemanagement\src\domain" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -340,18 +352,26 @@
       <workItem from="1586418969338" duration="8369000" />
       <workItem from="1586427782742" duration="703000" />
       <workItem from="1586482125510" duration="4901000" />
-      <workItem from="1587737915377" duration="282000" />
+      <workItem from="1587737915377" duration="1280000" />
     </task>
+    <task id="LOCAL-00001" summary="optimize multiThread">
+      <created>1587738275522</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1587738275522</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14255000" />
+    <option name="totallyTimeSpent" value="15253000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.15619047" visible="true" weight="0.26096824" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.15619047" visible="true" weight="0.26096824" />
       <window_info id="Structure" order="1" sideWeight="0.84380955" side_tool="true" weight="0.25718608" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -360,7 +380,7 @@
       <window_info id="Favorites" order="6" sideWeight="0.3721519" side_tool="true" weight="0.25718608" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.35909823" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2467742" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.2467742" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -385,18 +405,15 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="optimize multiThread" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimize multiThread" />
+  </component>
   <component name="editorHistoryManager">
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
           <caret line="698" column="29" selection-start-line="698" selection-start-column="29" selection-end-line="698" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frame/LoginFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="54" column="9" selection-start-line="54" selection-start-column="9" selection-end-line="54" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -561,7 +578,24 @@
     <entry file="file://$PROJECT_DIR$/src/application/ClientStart.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="294">
-          <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="210">
+            <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frame/LoginFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
