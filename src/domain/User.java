@@ -3,8 +3,12 @@ package domain;
 import data.DataProcessing;
 
 import java.io.*;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public abstract class User implements Serializable {
     /**
@@ -42,8 +46,10 @@ public abstract class User implements Serializable {
             String id = input.next();
             if (DataProcessing.searchDoc(id) == null) System.out.print("文件不存在！");
             Doc temp = DataProcessing.searchDoc(id);
-            File file = new File("D:\\OOP\\downloadfile\\" + temp.getFilename());
-            FileInputStream fin = new FileInputStream("D:\\OOP\\uploadfile\\" + temp.getFilename());
+            URL upresource = getClass().getClassLoader().getResource("resources/serverfiles");
+            URL downresource = getClass().getClassLoader().getResource("resources/clientfiles");
+            File file = new File(downresource + temp.getFilename());
+            FileInputStream fin = new FileInputStream(upresource + temp.getFilename());
             FileOutputStream fou = new FileOutputStream(file, true);
             byte[] temp1 = new byte[fin.available()];
             while (fin.read(temp1) > 0) {
@@ -66,11 +72,18 @@ public abstract class User implements Serializable {
     }
 
     public void showFileList() throws SQLException {
-//		double ranValue=Math.random();
-//		if (ranValue>0.5)
-//			throw new SQLException( "Error in accessing file DB" );
+/*		double ranValue=Math.random();
+		if (ranValue>0.5)
+			throw new SQLException( "Error in accessing file DB" );*/
         System.out.print("文件列表\n");
-        DataProcessing.getAllDocs();
+        List<Doc> allDocs = DataProcessing.getAllDocs();
+        for (Doc doc:
+                allDocs) {
+            System.out.println("ID:" + doc.getID() + "\tCreator:" +
+                    doc.getCreator() + "\tTime:" + doc.getTimestamp() +
+                    "\tFilename:" + doc.getFilename() + "\tDiscription:" +
+                    doc.getDescription() + "\n");
+        }
     }
 
     public void modSelfInfo() throws SQLException {

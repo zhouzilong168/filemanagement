@@ -1,6 +1,5 @@
 package domain;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -9,7 +8,7 @@ public class Browser extends User {
         super(name, password, role);
     }
 
-    public void showMenu() throws IOException, SQLException {
+    public void showMenu() {
         Scanner input = new Scanner(System.in);
         int s;
         do {

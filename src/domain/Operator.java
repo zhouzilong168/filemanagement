@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Scanner;
@@ -67,12 +68,10 @@ public class Operator extends User {
             System.out.println("the ID aleady exist! ÉÏ´«Ê§°Ü£¡");
             return false;
         } else {
-            File file = new File("D:\\OOP\\uploadfile\\" + name);
+            URL resource = getClass().getClassLoader().getResource("resources/serverfiles");
+            File file = new File(resource + name);
             FileInputStream fin = new FileInputStream(path + name);
             FileOutputStream fou = new FileOutputStream(file, true);
-//			while(fin.read()!=-1) {
-//				fou.write(fin.read());
-//			}
             byte[] temp = new byte[fin.available()];
             while (fin.read(temp) > 0) {
                 fou.write(temp);

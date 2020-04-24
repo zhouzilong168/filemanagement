@@ -10,11 +10,7 @@ import java.io.IOException;
  **/
 public class ServerStart {
     public static void main(String[] args) {
-        try {
-            DataProcessing.connectToDatabase();
-            new Server(); // create server
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DataProcessing.connectToDatabase();
+        new Server().runServer(); // create server
     }
 }

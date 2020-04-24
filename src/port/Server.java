@@ -5,7 +5,6 @@ import data.DataProcessing;
 import domain.Doc;
 import domain.User;
 
-import javax.naming.NameNotFoundException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,9 +12,14 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 服务器端，实现与多个客户端连接
@@ -27,195 +31,229 @@ public class Server extends JFrame {
     private JTextField enterField; // inputs message from user
     private JTextArea displayArea; // display information to user
     private ServerSocket server; // server socket
-    private Socket connection; // connection to client
     private int counter = 1; // counter of number of connections
+    private static final int PORT = 12345; // 连接端口
+    private static final int REQUESTS = 100; // 最大请求队列大小
 
-    private ObjectOutputStream dos; // output stream to client
-    private ObjectInputStream dis; // input stream from client
-    private FileOutputStream fos;
-    private FileInputStream fis;
+    private static ThreadLocal<ObjectOutputStream> outTl = new ThreadLocal<>();
+    private static ThreadLocal<ObjectInputStream> inTl = new ThreadLocal<>();
+    private static ThreadLocal<Socket> socketTl = new ThreadLocal<>();
 
-    // set up GUI
-    public Server() throws IOException {
+    // 线程池管理线程
+    private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
+            10, 100, 60l, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(REQUESTS), Executors.defaultThreadFactory(),
+            new ThreadPoolExecutor.AbortPolicy()
+    );
+
+    public Server() {
         super("Server");
-        ImageIcon icon = new ImageIcon("D:\\OOP\\pictrue\\server.jpg");
-        JLabel img = new JLabel(icon);
-        this.getLayeredPane().add(img, new Integer(Integer.MIN_VALUE));
-        img.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
-        Container contain = this.getContentPane();// 这里可以用Container 也可以用JPanel
-        ((JPanel) contain).setOpaque(false);// 设置内容窗格透明
-        enterField = new JTextField(); // create enterField
-        enterField.setEditable(false);
-        enterField.addActionListener(new ActionListener() {
-                                         // send message to client
-                                         public void actionPerformed(ActionEvent event) {
-                                             sendData(event.getActionCommand());
-                                             enterField.setText("");
-                                         }
-                                     }
-        );
+        showGUI();
+    }
 
-        add(enterField, BorderLayout.NORTH);
-        enterField.setOpaque(false);
-        displayArea = new JTextArea(); // create displayArea
-        displayArea.setFont(new Font("TimesRoman", Font.ROMAN_BASELINE, 15));
-        displayArea.setForeground(Color.CYAN);
-        displayArea.setOpaque(false);
-
-        JScrollPane jsp = new JScrollPane(displayArea); // JScrollPanel 设置透明时候，需要将滚动面板的数据源JViewPort设置为透明
-        jsp.setOpaque(false);
-        jsp.getViewport().setOpaque(false);
-        add(jsp, BorderLayout.CENTER);
-
-
-        setSize(300, 600); // set size of window
-        this.setLocation(1070, 30);
-        setVisible(true); // show window
-
-        // ServerSocket 处理 阻塞接受请求
-        server = new ServerSocket(12345, 100); // create ServerSocket
-        displayMessage("Waiting for connection\n");
+    public void runServer() {
         try {
+            // ServerSocket 处理 阻塞接受请求
+            server = new ServerSocket(PORT, REQUESTS); // create ServerSocket
+            displayMessage("Waiting for connection");
             while (true) {
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// 设置关闭服务器端GUI界面时，退出系统
-                connection = server.accept();// 接收一个消息
-                new CreateServerThread(connection).start();// 当有请求时，启一个线程处理-
+                Socket connection = server.accept();// 接收一个消息
+                threadPool.execute(new CreateServerThread(connection));// 当有请求时，加入线程池
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 counter++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            closeConnection();
-            server.close();
-        }
-    } // end Server constructor
-
-    // 内部类
-    class CreateServerThread extends Thread {
-        private Socket client;
-
-        public CreateServerThread(Socket s) throws IOException {
-            client = s;
-            displayMessage("\nConnection " + counter + " received from: " + client.getInetAddress().getHostName()
-                    + "\nClient(" + getName() + ") come in...");
-        }
-
-        public void run() {
             try {
-                runServer();
-            } catch (Exception e) {
+                server.close();
+            } catch (IOException e) {
+                System.out.println("server terminate error");
                 e.printStackTrace();
             }
         }
     }
 
-    // set up and run server
-    public void runServer() {
-        try // set up server to receive connections; process connections
-        {
-            try {
-                getStreams(); // get input & output streams
-                processConnection();
-            } catch (SocketException e) {
-                displayMessage("one Client exit");
-            } catch (EOFException eofException) {
-                displayMessage("\nServer terminated connection");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * 线程内部类启用处理客户端发来的请求
+     */
+    class CreateServerThread extends Thread {
+        private Socket client;
+
+        CreateServerThread(Socket s) {
+            client = s;
+            displayMessage("Connection " + counter + " received from: "
+                    + client.getInetAddress().getHostName()
+                    + "\nClient(" + getName() + ") come in...");
+        }
+
+        public void run() {
+            socketTl.set(client);
+            runServerThread();
         }
     }
 
-    // get streams to send and receive data
-    private void getStreams() throws IOException {
-        dos = new ObjectOutputStream(connection.getOutputStream());
-        dos.flush();
+    /**
+     * 服务器启用线程运行主体
+     */
+    private void runServerThread() {
+        try {
+            getStreams();
+            processConnection();
+        } catch (TerminationException e) {
+            displayMessage(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
 
-        // set up input stream for objects
-        dis = new ObjectInputStream(connection.getInputStream());
+    /**
+     * 获取连接流
+     */
+    private void getStreams() {
+        Socket connection = socketTl.get();
+        ObjectOutputStream dos = null;
+        ObjectInputStream dis = null;
+        try {
+            dos = new ObjectOutputStream(connection.getOutputStream());
+            dos.flush();
+
+            // set up input stream for objects
+            dis = new ObjectInputStream(connection.getInputStream());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        outTl.set(dos); // 添加当前流到线程本地变量
+        inTl.set(dis);
+/*
+        System.out.println("Thread:(getIO) " + Thread.currentThread().getName());
+        System.out.print("outTl: " + outTl.get());
+        System.out.println("\tinTl: " + inTl.get());
+*/
         displayMessage("\nGot I/O streams\n");
     }
 
-    private void processConnection()
-            throws IOException, NameNotFoundException, HeadlessException, SQLException, ClassNotFoundException {
+    /**
+     * 与客户端通信主进程
+     *
+     * @throws TerminationException
+     */
+    private void processConnection() throws TerminationException {
         String message = "Connection successful";
         sendData(message);
-        displayMessage("\nCLIENT>>> " + message);
+        displayMessage("CLIENT>>> " + message);
         setTextFieldEditable(true);
 
         int i;// 实现三次用户名或密码错误，系统退出不得再进行输入
         for (i = 0; i < 3; i++) {
-            message = (String) dis.readObject();
-            displayMessage("\n" + message);
-            System.out.println(message);
-            String users = (String) dis.readObject();
-            String pws = (String) dis.readObject();
-            users = users.substring(10);
-            pws = pws.substring(10);
-            System.out.println(users + pws);
-            final User user = DataProcessing.searchUser(users, pws);
+            String users = null;
+            String pws = null;
+            try {
+                message = (String) getData();
+                displayMessage(message);
+                //System.out.println("process: " + message + "\t" + Thread.currentThread().getName() + " " + inTl.get().hashCode());
+                users = (String) getData();
+                pws = (String) getData();
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("socket is error whiling read or send");
+                break;
+            }
+            if (users != null && pws != null) {
+                users = users.substring(10);
+                pws = pws.substring(10);
+            }
+            User user = null;
+            try {
+                user = DataProcessing.searchUser(users, pws);
+            } catch (SQLException e) {
+                System.out.println("database error");
+            }
             if (user == null) {
                 sendData("Error_user_or_pws");
             } else {
                 sendData("Logined successful");
-                dos.writeObject(user);
-                dos.flush();
-                do {
-                    try {
-                        message = (String) dis.readObject(); // read new message
-                        displayMessage("\n" + message); // display message
-                        // if(message.endsWith("Logining")) logining();
-                        if (message.endsWith("Self_Mod"))
-                            modSelf(user); // 修改
-                        if (message.endsWith("File_Up"))
-                            upFile(); // 上传
-                        if (message.endsWith("File_Down"))
-                            downFile();// 下载
-                        if (message.endsWith("User_Add"))
-                            addUser();// 新增用户
-                        if (message.endsWith("User_Mod"))
-                            modUser();// 修改用户
-                        if (message.endsWith("User_Del"))
-                            delUser();// 删除用户
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    } catch (ClassNotFoundException classNotFoundException) {
-                        displayMessage("\nUnknown object type received");
-                    } catch (HeadlessException e1) {
-                        // TODO 自动生成的 catch 块
-                        e1.printStackTrace();
-                    }
-                } while (!message.equals("CLIENT>>> TERMINATE"));
+                sendData(user);
+                exchangeMessage(user);
+                break;
             }
         }
         if (i == 3)
             sendData("Threes times Error_User_or_Password");
     }
 
-    // close streams and socket
-    private void closeConnection() {
-        displayMessage("\nTerminating connection\n");
-        setTextFieldEditable(false);
+    /**
+     * 与客户端消息通信
+     *
+     * @param user
+     * @return
+     */
+    private void exchangeMessage(User user) throws TerminationException {
+        String message = "";
+        do {
+            try {
+                message = (String) getData(); // read new message
+                if (message == null) {
+                    continue;
+                }
+                displayMessage(message); // display message
+                if (message.contains("TERMINATE")) {
+                    throw new TerminationException("one Client exit");
+                } else if (message.endsWith("Self_Mod")) {
+                    modSelf(user); // 修改
+                } else if (message.endsWith("File_Up")) {
+                    upFile(); // 上传
+                } else if (message.endsWith("File_Down")) {
+                    downFile();// 下载
+                } else if (message.endsWith("User_Add")) {
+                    addUser();// 新增用户
+                } else if (message.endsWith("User_Mod")) {
+                    modUser();// 修改用户
+                } else if (message.endsWith("User_Del")) {
+                    delUser();// 删除用户
+                }
+            } catch (SQLException e1) {
+                System.out.println("database error " + e1.getMessage());
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("socket is error whiling read or send");
+                break;
+            }
+        } while (true);
+    }
 
+    /**
+     * 关闭连接释放资源
+     */
+    private void closeConnection() {
+        setTextFieldEditable(false);
         try {
-            if (dos != null)
-                dos.close();
-            if (dis != null)
-                dis.close();
-            if (fos != null)
-                fos.close();
-            if (fis != null)
-                fis.close();
-            connection.close();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+            ObjectOutputStream oos = outTl.get();
+            if (oos != null) {
+                oos = null;
+            }
+            outTl.remove();
+            ObjectInputStream ois = inTl.get();
+            if (ois != null) {
+                ois = null;
+            }
+            inTl.remove();
+            socketTl.get().close();
+            socketTl.remove();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void modSelf(User user) throws SQLException, ClassNotFoundException, IOException {
-        String ppws = (String) dis.readObject();
-        String npws = (String) dis.readObject();
+    /**
+     * 修改自己信息
+     *
+     * @param user
+     * @throws SQLException
+     */
+    private void modSelf(User user) throws SQLException, IOException, ClassNotFoundException {
+        String ppws = (String) getData();
+        String npws = (String) getData();
         ppws = ppws.substring(10);
         npws = npws.substring(10);
         if (!ppws.equals(user.getPassword())) {
@@ -227,8 +265,13 @@ public class Server extends JFrame {
         }
     }
 
+    /**
+     * 上传文件
+     *
+     * @throws SQLException
+     */
     private void upFile() throws SQLException, IOException, ClassNotFoundException {
-        Doc doc = (Doc) dis.readObject();
+        Doc doc = (Doc) getData();
         if (DataProcessing.searchDoc(doc.getID()) != null) {
             sendData("File_ID_Exist");
         } else {
@@ -242,22 +285,32 @@ public class Server extends JFrame {
         }
     }
 
+    /**
+     * 下载文件
+     *
+     * @throws IOException
+     */
     private void downFile() throws IOException, ClassNotFoundException {
         String file = null;
         do {
-            file = (String) dis.readObject();
+            file = (String) getData();
             if (file.indexOf("File_Name") > 0) {
-                file = file.substring(10, file.indexOf("File_Name"));
-                sendData(file + "File_Down_prepare");
-                sendFile("D:\\OOP\\uploadfile\\" + file);
+                String filename = file.substring(10, file.indexOf("File_Name"));
+                sendData(filename + "File_Down_prepare");
+                sendFile(filename);
             }
         } while (!file.endsWith("File_Name_Last"));
     }
 
-    private void addUser() throws ClassNotFoundException, IOException, SQLException {
-        String users = (String) dis.readObject();
-        String pws = (String) dis.readObject();
-        String role = (String) dis.readObject();
+    /**
+     * 添加用户
+     *
+     * @throws SQLException
+     */
+    private void addUser() throws SQLException, IOException, ClassNotFoundException {
+        String users = (String) getData();
+        String pws = (String) getData();
+        String role = (String) getData();
         users = users.substring(10);
         pws = pws.substring(10);
         role = role.substring(10);
@@ -270,13 +323,17 @@ public class Server extends JFrame {
         } catch (MySQLIntegrityConstraintViolationException e) {
             sendData("User_Add_Name_Same");
         }
-
     }
 
-    private void modUser() throws ClassNotFoundException, IOException, SQLException {
-        String users = (String) dis.readObject();
-        String pws = (String) dis.readObject();
-        String role = (String) dis.readObject();
+    /**
+     * 修改用户
+     *
+     * @throws SQLException
+     */
+    private void modUser() throws SQLException, IOException, ClassNotFoundException {
+        String users = (String) getData();
+        String pws = (String) getData();
+        String role = (String) getData();
         users = users.substring(10);
         pws = pws.substring(10);
         role = role.substring(10);
@@ -287,10 +344,15 @@ public class Server extends JFrame {
         }
     }
 
-    private void delUser() throws ClassNotFoundException, IOException, SQLException {
+    /**
+     * 删除用户
+     *
+     * @throws SQLException
+     */
+    private void delUser() throws SQLException, IOException, ClassNotFoundException {
         String name = "";
         do {
-            name = (String) dis.readObject();
+            name = (String) getData();
             if (name.indexOf("Del_Name") > 0) {
                 name = name.substring(10, name.indexOf("Del"));
                 if (DataProcessing.deleteUser(name)) {
@@ -303,39 +365,61 @@ public class Server extends JFrame {
         } while (!name.endsWith("Del_Name_Last"));
     }
 
-    public void sendFile(String name) throws IOException {
+    /**
+     * 发送文件
+     *
+     * @param name
+     * @throws IOException
+     */
+    private void sendFile(String name) {
+        ObjectOutputStream oos = outTl.get();
+        //System.out.println("now is sending :" + Thread.currentThread().getName() + " | oos: " + oos);
+        FileInputStream fis = null;
+        URL resource = getClass().getClassLoader().getResource("resources/serverfiles/"+name);
         try {
-            File file = new File(name);
+            File file = new File(resource.toURI());
             fis = new FileInputStream(file);
             // 文件名和长度
-            dos.writeUTF(file.getName());
-            dos.flush();
-            dos.writeLong(file.length());
-            dos.flush();
+            oos.writeUTF(file.getName());
+            oos.flush();
+            oos.writeLong(file.length());
+            oos.flush();
             // 传输文件
             byte[] sendBytes = new byte[1024];
             int length = 0;
             while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {
-                dos.write(sendBytes, 0, length);
-                dos.flush();
+                oos.write(sendBytes, 0, length);
+                oos.flush();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         } finally {
-            if (fis != null)
-                fis.close();
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
 
-    // get file from client
-    private void getFile() throws IOException {
+    /**
+     * 接收文件
+     */
+    private void getFile() {
+        ObjectInputStream ois = inTl.get();
+        //System.out.println("now is getting :" + Thread.currentThread().getName() + " | ois: " + ois);
+        FileOutputStream fos = null;
         try {
             enterField.setOpaque(true);
             // 文件名和长度
-            String fileName = dis.readUTF();
-            long fileLength = dis.readLong();
-
-            fos = new FileOutputStream(new File("D:\\OOP\\uploadfile\\" + fileName));
+            String fileName = ois.readUTF();
+            long fileLength = ois.readLong();
+            URL resource = getClass().getClassLoader().getResource("resources/serverfiles/" + fileName);
+            fos = new FileOutputStream(new File(resource.toURI()));
             BufferedOutputStream bfos = new BufferedOutputStream(fos);
 
             byte[] sendBytes = new byte[1024];
@@ -344,13 +428,13 @@ public class Server extends JFrame {
             Timestamp past = new Timestamp(System.currentTimeMillis());
 
             int read = 0;
-            read = dis.read(sendBytes);
+            read = ois.read(sendBytes);
             transLen += read;
             enterField.setForeground(Color.BLACK);
             while (true) {
                 if (transLen == fileLength)
                     break;
-                read = dis.read(sendBytes);
+                read = ois.read(sendBytes);
                 transLen += read;
                 processBar(transLen, fileLength);
                 bfos.write(sendBytes, 0, read);
@@ -365,53 +449,95 @@ public class Server extends JFrame {
             Timestamp now = new Timestamp(System.currentTimeMillis());
             sendData("cost " + now.compareTo(past) + " ms");
             enterField.setOpaque(false);
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         } finally {
-            if (fos != null)
-                fos.close();
+            try {
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    // send message to client
-    private void sendData(String message) {
+    /**
+     * 发送数据
+     *
+     * @param obj
+     */
+    private void sendData(Object obj) {
+        ObjectOutputStream oos = outTl.get();
+        if (oos == null) {
+            System.out.println("ObjectOutputStream is null");
+            return;
+        }
         try {
-            dos.writeObject("SERVER>>> " + message);
-            dos.flush();
-            displayMessage("\nSERVER>>> " + message);
-        } catch (IOException ioException) {
-            displayArea.append("\nError writing object");
+            if (obj instanceof String) {
+                oos.writeObject("SERVER>>> " + obj);
+                displayMessage("SERVER>>> " + obj);
+            } else {
+                oos.writeObject(obj);
+            }
+            oos.flush();
+        } catch (IOException e) {
+            //displayArea.append("Error writing object");
+            //System.out.println("senddata");
+            e.printStackTrace();
         }
     }
 
-    // manipulates displayArea in the event-dispatch thread
+    /**
+     * 接受数据
+     *
+     * @return
+     */
+    private Object getData() throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = inTl.get();
+        if (ois == null) {
+            System.out.println("ObjectInputStream is null");
+            return null;
+        }
+        Object obj = null;
+        obj = ois.readObject();
+        return obj;
+    }
+
+    /**
+     * 打印数据
+     *
+     * @param messageToDisplay
+     */
     private void displayMessage(final String messageToDisplay) {
-        SwingUtilities.invokeLater(new Runnable() {
-                                       public void run() {
-                                           displayArea.append(messageToDisplay);
-                                       }
-                                   }
+        SwingUtilities.invokeLater(() -> displayArea.append(messageToDisplay + "\n")
         );
     }
 
-    // manipulates enterField in the event-dispatch thread
+    /**
+     * 设置文本域可编辑
+     *
+     * @param editable
+     */
     private void setTextFieldEditable(final boolean editable) {
-        SwingUtilities.invokeLater(new Runnable() {
-                                       public void run() {
-                                           enterField.setEditable(editable);
-                                       }
-                                   }
+        SwingUtilities.invokeLater(() -> enterField.setEditable(editable)
         );
     }
 
-    // 自定义进度条显示
-    void processBar(int now, long all) {
+    /**
+     * 自定义进度条显示
+     *
+     * @param now
+     * @param all
+     */
+    private void processBar(int now, long all) {
         double pros = (double) now / all;
         enterField.setSize((int) (pros * 300), 18);
         if (String.valueOf(pros).length() > 3) {
             enterField.setText("  " + String.valueOf(pros * 100).substring(0, 4) + " %");
         } else {
-            enterField.setText("  " + String.valueOf(pros) + " %");
+            enterField.setText("  " + pros + " %");
         }
         switch ((int) (pros * 10)) {
             case 0:
@@ -450,9 +576,53 @@ public class Server extends JFrame {
         }
     }
 
-    public static void main(String args[])
-            throws ClassNotFoundException, SQLException, IOException, HeadlessException, NameNotFoundException {
-        DataProcessing.connectToDatabase();
-        new Server(); // create server
+    /**
+     * GUI展示
+     */
+    private void showGUI() {
+        URL path = getClass().getClassLoader().getResource("resources/pictrue/server.jpg");
+        ImageIcon icon = new ImageIcon(path);
+        JLabel img = new JLabel(icon);
+        this.getLayeredPane().add(img, new Integer(Integer.MIN_VALUE));
+        img.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
+        Container contain = this.getContentPane();// 这里可以用Container 也可以用JPanel
+        ((JPanel) contain).setOpaque(false);// 设置内容窗格透明
+        enterField = new JTextField(); // create enterField
+        enterField.setEditable(false);
+        enterField.addActionListener(new ActionListener() {
+                                         // send message to client
+                                         public void actionPerformed(ActionEvent event) {
+                                             sendData(event.getActionCommand());
+                                             enterField.setText("");
+                                         }
+                                     }
+        );
+
+        add(enterField, BorderLayout.NORTH);
+        enterField.setOpaque(false);
+        displayArea = new JTextArea(); // create displayArea
+        displayArea.setFont(new Font("TimesRoman", Font.ROMAN_BASELINE, 15));
+        displayArea.setForeground(Color.CYAN);
+        displayArea.setOpaque(false);
+
+        JScrollPane jsp = new JScrollPane(displayArea); // JScrollPanel 设置透明时候，需要将滚动面板的数据源JViewPort设置为透明
+        jsp.setOpaque(false);
+        jsp.getViewport().setOpaque(false);
+        add(jsp, BorderLayout.CENTER);
+
+
+        setSize(300, 600); // set size of window
+        this.setLocation(1070, 30);
+        setVisible(true); // show window
+    }
+
+    class TerminationException extends Exception {
+        public TerminationException() {
+            super();
+        }
+
+        public TerminationException(String message) {
+            super(message);
+        }
     }
 }
