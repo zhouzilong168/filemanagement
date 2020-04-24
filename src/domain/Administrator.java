@@ -4,6 +4,7 @@ import data.DataProcessing;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Administrator extends User {
@@ -111,7 +112,12 @@ public class Administrator extends User {
 
     public void listUser() throws SQLException {
         System.out.print("列出用户\n");
-        DataProcessing.getAllUser();
+        List<User> users = DataProcessing.getAllUser();
+        for (User user :
+                users) {
+            System.out.print("name:" + user.getName() + "\tpassword:" +
+                    user.getPassword() + "\trole:" + user.getRole() + "\n");
+        }
     }
 
 }

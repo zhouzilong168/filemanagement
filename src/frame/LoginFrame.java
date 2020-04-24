@@ -1,33 +1,49 @@
 package frame;
 
-import data.DataProcessing;
 import port.Client;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.URL;
 
-public class loginFrame extends JFrame implements ActionListener {
+/**
+ * 登录窗体
+ */
+public class LoginFrame extends JFrame implements ActionListener {
     private static final long serialVersionUID = -7819688888899405353L;
     private JLabel userLab = new JLabel("用户名"),
             pwsLab = new JLabel("密码    ");
-    private static TextField userText = new TextField(15);
-    private static TextField pwsText = new TextField(15);
+    private TextField userText = new TextField(15);
+    private TextField pwsText = new TextField(15);
     private JButton sureBut = new JButton("确定"),
             cancelBut = new JButton("取消");
+    private ObjectOutputStream oos = null;
 
-    public loginFrame() {
+    public LoginFrame() {
         super("系统登录");
-        ImageIcon icon = new ImageIcon("D:\\OOP\\pictrue\\welcome.jpg");
+        oos = Client.getOutStream();
+        showGUI();
+    }
+
+    public LoginFrame(ObjectOutputStream oos) {
+        super("系统登录");
+        this.oos = oos;
+        showGUI();
+    }
+
+    private void showGUI() {
+        URL path = getClass().getClassLoader().getResource("resources/pictrue/welcome.jpg");
+        ImageIcon icon = new ImageIcon(path);
         JLabel img = new JLabel(icon);//通过Label实现图片加载
         this.getLayeredPane().add(img, new Integer(Integer.MIN_VALUE));//加入到Frame
         img.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());//设置大小
         Container contain = this.getContentPane();
         ((JPanel) contain).setOpaque(false);
         setSize(250, 200);
-//		this.setBackground(Color.CYAN);
         setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
         add(userLab);
         add(userText);
@@ -40,24 +56,25 @@ public class loginFrame extends JFrame implements ActionListener {
         sureBut.addActionListener(this);
         cancelBut.addActionListener(this);
         setLocationRelativeTo(null);
-
         setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sureBut || e.getSource() == pwsText) {
-            Client.sendData("Logining");
-            Client.sendData(userText.getText());
-            Client.sendData(pwsText.getText());
-            System.out.println(userText.getText() + "|" + pwsText.getText());
+            sendData("Logining");
+            sendData(userText.getText());
+            sendData(pwsText.getText());
         } else if (e.getSource() == cancelBut) {
             System.exit(0);
         }
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        DataProcessing.connectToDatabase();
-        new loginFrame();
+    private void sendData(String message) {
+        try {
+            oos.writeObject("CLIENT>>> " + message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 }

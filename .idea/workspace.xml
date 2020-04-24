@@ -2,22 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ca662eb-7ac9-4d3e-8a20-ff70edfab767" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/clientfiles/c3p0-0.9.1-pre6.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/TMFriend.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/client.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/client0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/client1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/file.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/selfMod.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/server.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/user.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/pictrue/welcome.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/resources/serverfiles/c3p0-0.9.1-pre6.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/application/ClientStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/application/ClientStart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/application/ServerStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/application/ServerStart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data/DataProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/DataProcessing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/SQLtest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/SQLtest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/Administrator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Administrator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/Browser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Browser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/Doc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Doc.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/Operator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/Operator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/JTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame/JTableModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/fileFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame/fileFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/mainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame/mainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/selfFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame/selfFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/frame/userFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame/userFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame/fileFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame/loginFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame/mainFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame/selfFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame/userFrame.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/port/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/port/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/port/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/port/Server.java" afterDir="false" />
     </list>
@@ -51,23 +60,68 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/port/Client.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/application/ClientStart.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1138">
-              <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
+            <state relative-caret-position="294">
+              <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/application/ServerStart.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="189">
+              <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frame/FileFrame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="248" selection-start-line="248" selection-end-line="248" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/data/DataProcessing.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4683">
-              <caret line="242" column="23" lean-forward="true" selection-start-line="242" selection-start-column="23" selection-end-line="242" selection-end-column="23" />
+            <state relative-caret-position="396">
+              <caret line="240" column="1" selection-start-line="240" selection-start-column="1" selection-end-line="240" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/domain/Administrator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
               <folding>
-                <element signature="method#Init#0;class#DataProcessing#0" />
+                <element signature="e#307#308#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/frame/MainFrame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="21">
+              <caret line="86" column="28" selection-start-line="86" selection-start-column="28" selection-end-line="86" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/port/Client.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -140,8 +194,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -158,7 +210,25 @@
               <item name="filemanagement" type="b2602c69:ProjectViewProjectNode" />
               <item name="filemanagement" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="filemanagement" type="b2602c69:ProjectViewProjectNode" />
+              <item name="filemanagement" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="filemanagement" type="b2602c69:ProjectViewProjectNode" />
+              <item name="filemanagement" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="domain" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="filemanagement" type="b2602c69:ProjectViewProjectNode" />
+              <item name="filemanagement" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="frame" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="filemanagement" type="b2602c69:ProjectViewProjectNode" />
@@ -170,13 +240,15 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
@@ -193,7 +265,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ServerStart">
+  <component name="RunManager" selected="Application.ClientStart">
     <configuration name="ClientStart" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="application.ClientStart" />
       <module name="filemanagement" />
@@ -268,16 +340,18 @@
       <workItem from="1586418969338" duration="8369000" />
       <workItem from="1586427782742" duration="703000" />
       <workItem from="1586482125510" duration="4901000" />
+      <workItem from="1587737915377" duration="282000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13973000" />
+    <option name="totallyTimeSpent" value="14255000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.15619047" visible="true" weight="0.25718608" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.15619047" visible="true" weight="0.26096824" />
       <window_info id="Structure" order="1" sideWeight="0.84380955" side_tool="true" weight="0.25718608" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -286,7 +360,7 @@
       <window_info id="Favorites" order="6" sideWeight="0.3721519" side_tool="true" weight="0.25718608" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.35909823" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.15322581" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2467742" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -319,7 +393,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frame/loginFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/frame/LoginFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="276">
           <caret line="54" column="9" selection-start-line="54" selection-start-column="9" selection-end-line="54" selection-end-column="9" />
@@ -333,14 +407,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frame/mainFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-273">
-          <caret line="86" column="28" selection-start-line="86" selection-start-column="28" selection-end-line="86" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frame/selfFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/frame/SelfFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1659">
           <caret line="87" lean-forward="true" selection-start-line="87" selection-end-line="87" />
@@ -350,7 +417,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/frame/userFrame.java">
+    <entry file="file://$PROJECT_DIR$/src/frame/UserFrame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2782">
           <caret line="190" column="35" lean-forward="true" selection-start-line="190" selection-start-column="35" selection-end-line="190" selection-end-column="35" />
@@ -364,16 +431,6 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#200#201#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/domain/Administrator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#241#242#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -421,16 +478,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/application/ServerStart.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="19" lean-forward="true" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/net/ServerSocket.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -452,31 +499,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/application/ClientStart.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="15" column="35" lean-forward="true" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/System.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="116">
           <caret line="109" column="36" selection-start-line="109" selection-start-column="36" selection-end-line="109" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/frame/fileFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="248" column="32" lean-forward="true" selection-start-line="248" selection-start-column="32" selection-end-line="248" selection-end-column="32" />
-          <folding>
-            <element signature="e#7128#8309#0" />
-            <element signature="e#9375#10152#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -487,20 +513,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/DataProcessing.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="240" column="1" selection-start-line="240" selection-start-column="1" selection-end-line="240" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/domain/Administrator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#307#308#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/frame/MainFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="86" column="28" selection-start-line="86" selection-start-column="28" selection-end-line="86" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/port/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1138">
+        <state relative-caret-position="396">
           <caret line="162" column="23" selection-start-line="162" selection-start-column="23" selection-end-line="162" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/DataProcessing.java">
+    <entry file="file://$PROJECT_DIR$/src/frame/FileFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4683">
-          <caret line="242" column="23" lean-forward="true" selection-start-line="242" selection-start-column="23" selection-end-line="242" selection-end-column="23" />
-          <folding>
-            <element signature="method#Init#0;class#DataProcessing#0" />
-          </folding>
+        <state relative-caret-position="264">
+          <caret line="248" selection-start-line="248" selection-end-line="248" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/application/ServerStart.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/application/ClientStart.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="19" column="13" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
         </state>
       </provider>
     </entry>

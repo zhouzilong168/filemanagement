@@ -4,8 +4,8 @@ package data;
 import domain.*;
 
 import java.sql.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 连接数据库
@@ -157,57 +157,49 @@ public class DataProcessing {
         return false;
     }
 
-    public static Enumeration<User> getAllUser() throws SQLException {
+    public static List<User> getAllUser() throws SQLException {
         if (!connectedToDatabase) {
             throw new SQLException("Not connected to Database");
         }
         String sql = "select * from user_info";
         statement = connection.createStatement();
         resultSet = statement.executeQuery(sql);
-        Hashtable<String, User> users = new Hashtable<String, User>();
+        List<User> users = new ArrayList<>();
         while (resultSet.next()) {
             String temp = resultSet.getString(3);
             switch (temp.compareTo("browser")) {
                 case 0:
-                    users.put(resultSet.getString(1), new Browser(resultSet.getString(1),
+                    users.add(new Browser(resultSet.getString(1),
                             resultSet.getString(2), resultSet.getString(3)));
                     break;
                 case -1:
-                    users.put(resultSet.getString(1), new Administrator(resultSet.getString(1),
+                    users.add(new Administrator(resultSet.getString(1),
                             resultSet.getString(2), resultSet.getString(3)));
                     break;
                 default:
-                    users.put(resultSet.getString(1), new Operator(resultSet.getString(1),
+                    users.add(new Operator(resultSet.getString(1),
                             resultSet.getString(2), resultSet.getString(3)));
                     break;
             }
-            System.out.print("name:" + resultSet.getString(1) + "\tpassword:" +
-                    resultSet.getString(2) + "\trole:" + resultSet.getString(3) + "\n");
         }
-        Enumeration<User> e = users.elements();
-        return e;
+        return users;
     }
     // User用户数据库处理=============================================End
 
     // Doc文件数据库处理=============================================Start
-    public static Enumeration<Doc> getAllDocs() throws SQLException {
+    public static List<Doc> getAllDocs() throws SQLException {
         if (!connectedToDatabase) {
             throw new SQLException("Not connected to Database");
         }
         String sql = "select * from doc_info";
         statement = connection.createStatement();
         resultSet = statement.executeQuery(sql);
-        Hashtable<String, Doc> docs = new Hashtable<String, Doc>();
+        List<Doc> list = new ArrayList<>();
         while (resultSet.next()) {
-            docs.put(resultSet.getString(1), new Doc(resultSet.getString(1), resultSet.getString(2),
+            list.add(new Doc(resultSet.getString(1), resultSet.getString(2),
                     resultSet.getTimestamp(3), resultSet.getString(4), resultSet.getString(5)));
-            System.out.println("ID:" + resultSet.getString("Id") + "\tCreator:" +
-                    resultSet.getString("creator") + "\tTime:" + resultSet.getTimestamp("timestamp") +
-                    "\tFilename:" + resultSet.getString("filename") + "\tDiscription:" +
-                    resultSet.getString("description") + "\n");
         }
-        Enumeration<Doc> e = docs.elements();
-        return e;
+        return list;
     }
 
     public static Doc searchDoc(String DocID) throws SQLException {

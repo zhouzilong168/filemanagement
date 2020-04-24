@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class Doc implements Serializable {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = -7421087200574025532L;
     private String ID;
     private String creator;

@@ -1,7 +1,5 @@
 package frame;
 
-import data.DataProcessing;
-import domain.Administrator;
 import domain.User;
 import port.Client;
 
@@ -9,9 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.URL;
 
-public class mainFrame extends JFrame implements ActionListener {
+/**
+ * 主界面窗体
+ */
+public class MainFrame extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = -5590758903420072106L;
     private JLabel label = new JLabel();
@@ -30,13 +33,26 @@ public class mainFrame extends JFrame implements ActionListener {
             sysExit = new JMenuItem("退出系统"),
             sysBack = new JMenuItem("切换角色");
     private User temp;
+    private ObjectOutputStream oos = null;
 
-    public mainFrame(User temp) {
-        super("用户界面");
+    public MainFrame(User temp) {
+        super("用户界面[" + temp.getName() + "]");
         this.temp = temp;
+        oos = Client.getOutStream();
+        showGUI();
+    }
 
+    public MainFrame(User temp, ObjectOutputStream oos) {
+        super("用户界面[" + temp.getName() + "]");
+        this.temp = temp;
+        this.oos = oos;
+        showGUI();
+    }
+
+    private void showGUI() {
         setLayout(new BorderLayout());
-        ImageIcon image = new ImageIcon("D:\\OOP\\pictrue\\TMFriend.jpg");
+        URL path = getClass().getClassLoader().getResource("resources/pictrue/TMFriend.jpg");
+        ImageIcon image = new ImageIcon(path);
         label.setIcon(image);
         add("Center", label);
         setSize(image.getIconWidth(), image.getIconHeight());
@@ -61,8 +77,8 @@ public class mainFrame extends JFrame implements ActionListener {
         modMessage.addActionListener(this);
         sysExit.addActionListener(this);
         sysBack.addActionListener(this);
-//		add("Center",new JTextField());
         setLocationRelativeTo(null);
+
         setVisible(true);
         if (temp.getRole().equals("administrator")) {
             upFile.setEnabled(false);
@@ -78,46 +94,34 @@ public class mainFrame extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sysExit) {
-            Client.sendData("TERMINATE");
+            sendData("TERMINATE");
             System.exit(0);
         } else if (e.getSource() == sysBack) {
             this.dispose();
-            new loginFrame();
+            new LoginFrame(oos);
         } else if (e.getSource() == modUser) {
-            new userFrame(temp);
+            new UserFrame(temp, oos);
         } else if (e.getSource() == addUser) {
-            new userFrame(temp);
+            new UserFrame(temp, oos);
         } else if (e.getSource() == delUser) {
-            new userFrame(temp);
+            new UserFrame(temp, oos);
         } else if (e.getSource() == upFile) {
-            try {
-                new fileFrame(temp);
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
+            new FileFrame(temp, oos);
         } else if (e.getSource() == downFile) {
-            try {
-                new fileFrame(temp);
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
+            new FileFrame(temp, oos);
         } else if (e.getSource() == modMessage) {
-            new selfFrame(temp);
+            new SelfFrame(temp, oos);
         } else {
 
         }
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    private void sendData(String message) {
         try {
-            DataProcessing.connectToDatabase();
-            new mainFrame(new Administrator("a", "123", "administrator"));
-        } catch (Exception e) {
-            System.out.println("error");
-            e.getMessage();
+            oos.writeObject("CLIENT>>> " + message);
+            oos.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }

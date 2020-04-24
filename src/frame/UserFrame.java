@@ -1,7 +1,6 @@
 package frame;
 
 import data.DataProcessing;
-import domain.Administrator;
 import domain.User;
 import port.Client;
 
@@ -9,10 +8,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.sql.SQLException;
-import java.util.Enumeration;
+import java.util.ArrayList;
 
-public class userFrame extends JFrame implements ActionListener {
+/**
+ * 用户界面窗体
+ */
+public class UserFrame extends JFrame implements ActionListener {
     private static final long serialVersionUID = 5364838666837636940L;
     private JPanel upPanel = new JPanel(),
             addPanel = new JPanel(),
@@ -31,19 +36,32 @@ public class userFrame extends JFrame implements ActionListener {
     private Choice userList = new Choice(),
             roleList = new Choice();
 
-    List list = new List(6, true);
+    private List list = new List(6, true);
 
-    JButton addUser = new JButton("新增用户"),
+    private JButton addUser = new JButton("新增用户"),
             modUser = new JButton("修改用户"),
             delUser = new JButton("删除用户");
 
-    String[] delName = new String[20];
+    java.util.List<String> delName = new ArrayList<>();
 
     private User user;
+    private ObjectOutputStream oos = null;
 
-    public userFrame(User user) {
+    public UserFrame(User user) {
         super("用户管理界面");
-        ImageIcon icon = new ImageIcon("D:\\OOP\\pictrue\\user.jpg");
+        oos = Client.getOutStream();
+        showGUI();
+    }
+
+    public UserFrame(User user, ObjectOutputStream oos) {
+        super("用户管理界面");
+        this.oos = oos;
+        showGUI();
+    }
+
+    private void showGUI() {
+        URL path = getClass().getClassLoader().getResource("resources/pictrue/user.jpg");
+        ImageIcon icon = new ImageIcon(path);
         JLabel img = new JLabel(icon);
         this.getLayeredPane().add(img, new Integer(Integer.MIN_VALUE));
         img.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
@@ -93,31 +111,34 @@ public class userFrame extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * 更新用户列表，每当修改用户的时候都需修改
+     */
     private void flushUser() {
         list.removeAll();
-        Enumeration<User> user;
         try {
-            user = DataProcessing.getAllUser();
-            int i = 0;
-            while (user.hasMoreElements()) {
-                User temp = user.nextElement();
-                delName[i++] = temp.getName();
-                list.add("                " + temp.getName() + "                          " +
-                        temp.getPassword() + "                   " + temp.getRole());
+            java.util.List<User> users = DataProcessing.getAllUser();
+            for (User user :
+                    users) {
+                delName.add(user.getName());
+                list.add("                " + user.getName() + "                          " +
+                        user.getPassword() + "                   " + user.getRole());
             }
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
     }
 
+    /**
+     * 更新用户名列表，每当修改用户的时候都需修改
+     */
     private void flushUserName() {
         userList.removeAll();
-        Enumeration<User> user;
         try {
-            user = DataProcessing.getAllUser();
-            while (user.hasMoreElements()) {
-                User temp = user.nextElement();
-                userList.add(temp.getName());
+            java.util.List<User> users = DataProcessing.getAllUser();
+            for (User user :
+                    users) {
+                userList.add(user.getName());
             }
         } catch (SQLException e1) {
             e1.printStackTrace();
@@ -193,21 +214,23 @@ public class userFrame extends JFrame implements ActionListener {
             setVisible(true);
         } else if (e.getSource() == addBut) {
             Object[] option = {"确定", "取消"};
-            if (JOptionPane.showOptionDialog(null, "确认要添加用户吗？", "提示！", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE, new ImageIcon("D:\\OOP\\pictrue.jpg"), option, option[1]) == 0) {
-                Client.sendData("User_Add");
-                Client.sendData(userText.getText());
-                Client.sendData(pwsText.getText());
-                Client.sendData(roleList.getSelectedItem());
+            if (JOptionPane.showOptionDialog(null, "确认要添加用户吗？",
+                    "提示！", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, option, option[1]) == 0) {
+                sendData("User_Add");
+                sendData(userText.getText());
+                sendData(pwsText.getText());
+                sendData(roleList.getSelectedItem());
             }
         } else if (e.getSource() == modBut) {
             Object[] option = {"确定", "取消"};
-            if (JOptionPane.showOptionDialog(null, "确认要修改用户吗？", "提示！", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE, new ImageIcon("D:\\OOP\\pictrue.jpg"), option, option[1]) == 0) {
-                Client.sendData("User_Mod");
-                Client.sendData(userList.getSelectedItem());
-                Client.sendData(pwsText.getText());
-                Client.sendData(roleList.getSelectedItem());
+            if (JOptionPane.showOptionDialog(null, "确认要修改用户吗？",
+                    "提示！", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, option, option[1]) == 0) {
+                sendData("User_Mod");
+                sendData(userList.getSelectedItem());
+                sendData(pwsText.getText());
+                sendData(roleList.getSelectedItem());
             }
         } else if (e.getSource() == delBut) {
             int[] delIndex = list.getSelectedIndexes();
@@ -215,14 +238,15 @@ public class userFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(new JButton("确定"), "请至少选择一项");
             } else {
                 Object[] option = {"确定", "取消"};
-                if (JOptionPane.showOptionDialog(null, "确认要删除用户吗？", "提示！", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.PLAIN_MESSAGE, new ImageIcon("D:\\OOP\\pictrue.jpg"), option, option[1]) == 0) {
+                if (JOptionPane.showOptionDialog(null, "确认要删除用户吗？",
+                        "提示！", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                        null, option, option[1]) == 0) {
                     int s;
-                    Client.sendData("User_Del");
+                    sendData("User_Del");
                     for (s = 0; s < delIndex.length - 1; s++) {
-                        Client.sendData(delName[delIndex[s]] + "Del_Name");
+                        sendData(delName.get(delIndex[s]) + "Del_Name");
                     }
-                    Client.sendData(delName[delIndex[s]] + "Del_Name_Last");
+                    sendData(delName.get(delIndex[s]) + "Del_Name_Last");
                 } else {
 
                 }
@@ -236,9 +260,13 @@ public class userFrame extends JFrame implements ActionListener {
 
     }
 
-    public static void main(String[] args) {
-        new userFrame(new Administrator("a", "b", "c"));
+    private void sendData(String message) {
+        try {
+            oos.writeObject("CLIENT>>> " + message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 
 }

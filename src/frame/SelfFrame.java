@@ -1,6 +1,5 @@
 package frame;
 
-import domain.Browser;
 import domain.User;
 import port.Client;
 
@@ -8,9 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.URL;
 
-public class selfFrame extends JFrame implements ActionListener {
+/**
+ * 个人信息修改窗体
+ */
+public class SelfFrame extends JFrame implements ActionListener {
     private static final long serialVersionUID = -2274384143825653568L;
     private JPanel panel = new JPanel();
     private JLabel userLab = new JLabel("用户名"),
@@ -26,10 +30,23 @@ public class selfFrame extends JFrame implements ActionListener {
     private JButton modBut = new JButton("修改"),
             backBut = new JButton("返回");
     private User user;
+    private ObjectOutputStream oos = null;
 
-    public selfFrame(User temp) {
-        this.user = temp;
-        ImageIcon icon = new ImageIcon("D:\\OOP\\pictrue\\selfMod.jpg");
+    public SelfFrame(User user) {
+        this.user = user;
+        oos = Client.getOutStream();
+        showGUI(user);
+    }
+
+    public SelfFrame(User user, ObjectOutputStream oos) {
+        this.user = user;
+        this.oos = oos;
+        showGUI(user);
+    }
+
+    private void showGUI(User user) {
+        URL path = getClass().getClassLoader().getResource("resources/pictrue/selfMod.jpg");
+        ImageIcon icon = new ImageIcon(path);
         JLabel img = new JLabel(icon);
         this.getLayeredPane().add(img, new Integer(Integer.MIN_VALUE));
         img.setBounds(0, 0, 300, 250);
@@ -50,9 +67,9 @@ public class selfFrame extends JFrame implements ActionListener {
         ppwsText.setEchoChar('*');
         npwsText.setEchoChar('*');
         npwsText1.setEchoChar('*');
-        userText.setText(temp.getName());
+        userText.setText(user.getName());
         userText.setEnabled(false);
-        roleText.setText(temp.getRole());
+        roleText.setText(user.getRole());
         roleText.setEnabled(false);
         panel.add(roleText);
         panel.setOpaque(false);
@@ -74,19 +91,24 @@ public class selfFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(new JButton("确定"), "和原密码一致！");
             } else if (!npwsText.getText().equals(npwsText1.getText())) {
                 JOptionPane.showMessageDialog(new JButton("确定"), "确认密码错误！");
-            } else if (JOptionPane.showOptionDialog(null, "确认要修改密码吗？", "提示！", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE, new ImageIcon("D:\\OOP\\pictrue.jpg"), option, option[1]) == 0) {
-                Client.sendData("Self_Mod");
-                Client.sendData(ppwsText.getText());
-                Client.sendData(npwsText.getText());
+            } else if (JOptionPane.showOptionDialog(null, "确认要修改密码吗？",
+                    "提示！", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, option, option[1]) == 0) {
+                sendData("Self_Mod");
+                sendData(ppwsText.getText());
+                sendData(npwsText.getText());
             }
         } else if (e.getSource() == backBut) {
             this.dispose();
         }
-
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        new selfFrame(new Browser("s", "123", "browser"));
+    private void sendData(String message) {
+        try {
+            oos.writeObject("CLIENT>>> " + message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

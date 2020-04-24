@@ -11,10 +11,14 @@ import java.sql.SQLException;
 public class ClientStart {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         DataProcessing.connectToDatabase();
+        //int count = 1;
+        int count = 3;
         try {
-            Client mt = new Client("127.0.0.1");
-            new Thread(mt).start();
-        } catch (Exception e) {
+            for (int i = 0; i < count; i++) {
+                new Thread(new Client("127.0.0.1",12345)).start();
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
