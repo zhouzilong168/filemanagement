@@ -12,11 +12,11 @@ show:
 
 单个客户端：
 
-![singleshow](https://github.com/zhouzilong168/filemanagement/blob/master/src/resources/pictrue/single.png)
+![single.png](https://i.loli.net/2020/04/25/TCeZPK9cLthEM5F.png)
 
 多个客户端：
 
-![multishow](https://github.com/zhouzilong168/filemanagement/blob/master/src/resources/pictrue/multi.png)
+![multi.png](https://i.loli.net/2020/04/25/L8hEpzZAyRs75Mf.png)
 
 
 
